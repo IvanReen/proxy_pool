@@ -30,7 +30,7 @@ class ProxyValidSchedule(ProxyManager, object):
     def __init__(self):
         ProxyManager.__init__(self)
         self.queue = Queue()
-        self.proxy_item = dict()
+        self.proxy_item = {}
 
     def __validProxy(self, threads=10):
         """
@@ -38,10 +38,7 @@ class ProxyValidSchedule(ProxyManager, object):
         :param threads: 线程数
         :return:
         """
-        thread_list = list()
-        for index in range(threads):
-            thread_list.append(ProxyCheck(self.queue, self.proxy_item))
-
+        thread_list = [ProxyCheck(self.queue, self.proxy_item) for _ in range(threads)]
         for thread in thread_list:
             thread.daemon = True
             thread.start()

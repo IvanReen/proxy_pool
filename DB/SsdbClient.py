@@ -50,8 +50,7 @@ class SsdbClient(object):
         :param proxy:
         :return:
         """
-        data = self.__conn.hget(name=self.name, key=proxy)
-        if data:
+        if data := self.__conn.hget(name=self.name, key=proxy):
             return data.decode('utf-8') if EnvUtil.PY3 else data
         else:
             return None
@@ -63,8 +62,7 @@ class SsdbClient(object):
         :param num:
         :return:
         """
-        data = self.__conn.hset(self.name, proxy, num)
-        return data
+        return self.__conn.hset(self.name, proxy, num)
 
     def delete(self, key):
         """
@@ -82,8 +80,7 @@ class SsdbClient(object):
         弹出一个代理
         :return: dict {proxy: value}
         """
-        proxies = self.__conn.hkeys(self.name)
-        if proxies:
+        if proxies := self.__conn.hkeys(self.name):
             proxy = random.choice(proxies)
             value = self.__conn.hget(self.name, proxy)
             self.delete(proxy)

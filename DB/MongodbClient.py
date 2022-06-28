@@ -36,8 +36,7 @@ class MongodbClient(object):
             self.db[self.name].insert({'proxy': proxy, 'num': num})
 
     def pop(self):
-        data = list(self.db[self.name].aggregate([{'$sample': {'size': 1}}]))
-        if data:
+        if data := list(self.db[self.name].aggregate([{'$sample': {'size': 1}}])):
             data = data[0]
             value = data['proxy']
             self.delete(value)
@@ -60,7 +59,7 @@ class MongodbClient(object):
         self.db[self.name].update({'proxy': key}, {'$inc': {'num': value}})
 
     def exists(self, key):
-        return True if self.db[self.name].find_one({'proxy': key}) != None else False
+        return self.db[self.name].find_one({'proxy': key}) != None
 
     def getNumber(self):
         return self.db[self.name].count()

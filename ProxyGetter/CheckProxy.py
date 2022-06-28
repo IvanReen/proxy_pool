@@ -34,14 +34,14 @@ class CheckProxy(object):
         """
         import inspect
         member_list = inspect.getmembers(GetFreeProxy, predicate=inspect.isfunction)
-        proxy_count_dict = dict()
+        proxy_count_dict = {}
         for func_name, func in member_list:
-            log.info(u"开始运行 {}".format(func_name))
+            log.info(f"开始运行 {func_name}")
             try:
                 proxy_list = [_ for _ in func() if verifyProxyFormat(_)]
                 proxy_count_dict[func_name] = len(proxy_list)
             except Exception as e:
-                log.info(u"代理获取函数 {} 运行出错!".format(func_name))
+                log.info(f"代理获取函数 {func_name} 运行出错!")
                 log.error(str(e))
         log.info(u"所有函数运行完毕 " + "***" * 5)
         for func_name, func in member_list:
@@ -58,11 +58,11 @@ class CheckProxy(object):
             None
         """
         func_name = getattr(func, '__name__', "None")
-        log.info("start running func: {}".format(func_name))
+        log.info(f"start running func: {func_name}")
         count = 0
         for proxy in func():
             if verifyProxyFormat(proxy):
-                log.info("fetch proxy: {}".format(proxy))
+                log.info(f"fetch proxy: {proxy}")
                 count += 1
         log.info("{n} completed, fetch proxy number: {c}".format(n=func_name, c=count))
 

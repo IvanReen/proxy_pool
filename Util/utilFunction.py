@@ -44,7 +44,7 @@ def verifyProxyFormat(proxy):
     import re
     verify_regex = r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}"
     _proxy = re.findall(verify_regex, proxy)
-    return True if len(_proxy) == 1 and _proxy[0] == proxy else False
+    return len(_proxy) == 1 and _proxy[0] == proxy
 
 
 # noinspection PyPep8Naming
@@ -84,7 +84,7 @@ def tcpConnect(proxy):
     s = socket(AF_INET, SOCK_STREAM)
     ip, port = proxy.split(':')
     result = s.connect_ex((ip, int(port)))
-    return True if result == 0 else False
+    return result == 0
 
 
 # noinspection PyPep8Naming

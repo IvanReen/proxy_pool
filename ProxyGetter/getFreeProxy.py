@@ -69,7 +69,7 @@ class GetFreeProxy(object):
             ul_list = html_tree.xpath('//ul[@class="l2"]')
             for ul in ul_list:
                 try:
-                    yield ':'.join(ul.xpath('.//li/text()')[0:2])
+                    yield ':'.join(ul.xpath('.//li/text()')[:2])
                 except Exception as e:
                     print(e)
 
@@ -81,10 +81,10 @@ class GetFreeProxy(object):
         :param page: 翻页
         :return:
         """
-        area = 33 if area > 33 else area
+        area = min(area, 33)
         for area_index in range(1, area + 1):
             for i in range(1, page + 1):
-                url = "http://www.66ip.cn/areaindex_{}/{}.html".format(area_index, i)
+                url = f"http://www.66ip.cn/areaindex_{area_index}/{i}.html"
                 html_tree = getHtmlTree(url)
                 tr_list = html_tree.xpath("//*[@id='footer']/div/table/tr[position()>1]")
                 if len(tr_list) == 0:
@@ -105,7 +105,7 @@ class GetFreeProxy(object):
         try:
             tr_list = html_tree.xpath('//tr')[1:]
             for tr in tr_list:
-                yield ':'.join(tr.xpath('./td/text()')[0:2])
+                yield ':'.join(tr.xpath('./td/text()')[:2])
         except Exception as e:
             pass
 
@@ -126,7 +126,7 @@ class GetFreeProxy(object):
                 proxy_list = tree.xpath('.//table[@id="ip_list"]//tr[position()>1]')
                 for proxy in proxy_list:
                     try:
-                        yield ':'.join(proxy.xpath('./td/text()')[0:2])
+                        yield ':'.join(proxy.xpath('./td/text()')[:2])
                     except Exception as e:
                         pass
 
@@ -151,7 +151,7 @@ class GetFreeProxy(object):
                 # :符号裸放在td下，其他放在div span p中，先分割找出ip，再找port
                 ip_addr = ''.join(each_proxy.xpath(xpath_str))
                 port = each_proxy.xpath(".//span[contains(@class, 'port')]/text()")[0]
-                yield '{}:{}'.format(ip_addr, port)
+                yield f'{ip_addr}:{port}'
             except Exception as e:
                 pass
 
@@ -166,7 +166,7 @@ class GetFreeProxy(object):
         try:
             res = request.get(url).json()
             for row in res['RESULT']['rows']:
-                yield '{}:{}'.format(row['ip'], row['port'])
+                yield f"{row['ip']}:{row['port']}"
         except Exception as e:
             pass
 
@@ -185,16 +185,16 @@ class GetFreeProxy(object):
                 tree = getHtmlTree(page_url)
                 proxy_list = tree.xpath('.//table//tr')
                 for tr in proxy_list[1:]:
-                    yield ':'.join(tr.xpath('./td/text()')[0:2])
+                    yield ':'.join(tr.xpath('./td/text()')[:2])
 
     @staticmethod
     def freeProxyEight():
         """
         秘密代理 http://www.mimiip.com
         """
-        url_gngao = ['http://www.mimiip.com/gngao/%s' % n for n in range(1, 10)]  # 国内高匿
-        url_gnpu = ['http://www.mimiip.com/gnpu/%s' % n for n in range(1, 10)]  # 国内普匿
-        url_gntou = ['http://www.mimiip.com/gntou/%s' % n for n in range(1, 10)]  # 国内透明
+        url_gngao = [f'http://www.mimiip.com/gngao/{n}' for n in range(1, 10)]
+        url_gnpu = [f'http://www.mimiip.com/gnpu/{n}' for n in range(1, 10)]
+        url_gntou = [f'http://www.mimiip.com/gntou/{n}' for n in range(1, 10)]
         url_list = url_gngao + url_gnpu + url_gntou
 
         request = WebRequest()
@@ -261,7 +261,7 @@ class GetFreeProxy(object):
         :return:
         """
         for i in range(1, page_count + 1):
-            url = 'http://ip.jiangxianli.com/?page={}'.format(i)
+            url = f'http://ip.jiangxianli.com/?page={i}'
             html_tree = getHtmlTree(url)
             tr_list = html_tree.xpath("/html/body/div[1]/div/div[1]/div[2]/table/tbody/tr")
             if len(tr_list) == 0:
@@ -289,7 +289,10 @@ class GetFreeProxy(object):
         https://proxy-list.org/english/index.php
         :return:
         """
-        urls = ['https://proxy-list.org/english/index.php?p=%s' % n for n in range(1, 10)]
+        urls = [
+            f'https://proxy-list.org/english/index.php?p={n}' for n in range(1, 10)
+        ]
+
         request = WebRequest()
         import base64
         for url in urls:
