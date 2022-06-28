@@ -64,15 +64,13 @@ class DbClient(object):
         :return:
         """
         __type = None
-        if "SSDB" == self.config.db_type:
-            __type = "SsdbClient"
-        elif "REDIS" == self.config.db_type:
-            __type = "RedisClient"
-        elif "MONGODB" == self.config.db_type:
+        if self.config.db_type == "MONGODB":
             __type = "MongodbClient"
-        else:
-            pass
-        assert __type, 'type error, Not support DB type: {}'.format(self.config.db_type)
+        elif self.config.db_type == "REDIS":
+            __type = "RedisClient"
+        elif self.config.db_type == "SSDB":
+            __type = "SsdbClient"
+        assert __type, f'type error, Not support DB type: {self.config.db_type}'
         self.client = getattr(__import__(__type), __type)(name=self.config.db_name,
                                                           host=self.config.db_host,
                                                           port=self.config.db_port)

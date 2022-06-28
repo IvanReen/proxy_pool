@@ -27,10 +27,9 @@ class LazyProperty(object):
     def __get__(self, instance, owner):
         if instance is None:
             return self
-        else:
-            value = self.func(instance)
-            setattr(instance, self.func.__name__, value)
-            return value
+        value = self.func(instance)
+        setattr(instance, self.func.__name__, value)
+        return value
 
 
 try:
@@ -58,7 +57,7 @@ class Singleton(type):
 
     _inst = {}
 
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._inst:
-            cls._inst[cls] = super(Singleton, cls).__call__(*args)
-        return cls._inst[cls]
+    def __call__(self, *args, **kwargs):
+        if self not in self._inst:
+            self._inst[self] = super(Singleton, self).__call__(*args)
+        return self._inst[self]

@@ -45,7 +45,7 @@ class ProxyManager(object):
             proxy_set = set()
             try:
                 self.log.info("{func}: fetch proxy start".format(func=proxyGetter))
-                proxy_iter = [_ for _ in getattr(GetFreeProxy, proxyGetter.strip())()]
+                proxy_iter = list(getattr(GetFreeProxy, proxyGetter.strip())())
             except Exception as e:
                 self.log.error("{func}: fetch proxy fail".format(func=proxyGetter))
                 continue
@@ -71,8 +71,7 @@ class ProxyManager(object):
         :return:
         """
         self.db.changeTable(self.useful_proxy_queue)
-        item_dict = self.db.getAll()
-        if item_dict:
+        if item_dict := self.db.getAll():
             if EnvUtil.PY3:
                 return random.choice(list(item_dict.keys()))
             else:

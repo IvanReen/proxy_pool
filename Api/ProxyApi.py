@@ -54,21 +54,17 @@ def index():
 @app.route('/get/')
 def get():
     proxy = ProxyManager().get()
-    return proxy if proxy else 'no proxy!'
+    return proxy or 'no proxy!'
 
 
 @app.route('/refresh/')
 def refresh():
-    # TODO refresh会有守护程序定时执行，由api直接调用性能较差，暂不使用
-    # ProxyManager().refresh()
-    pass
     return 'success'
 
 
 @app.route('/get_all/')
 def getAll():
-    proxies = ProxyManager().getAll()
-    return proxies
+    return ProxyManager().getAll()
 
 
 @app.route('/delete/', methods=['GET'])
@@ -80,8 +76,7 @@ def delete():
 
 @app.route('/get_status/')
 def getStatus():
-    status = ProxyManager().getNumber()
-    return status
+    return ProxyManager().getNumber()
 
 
 def run():

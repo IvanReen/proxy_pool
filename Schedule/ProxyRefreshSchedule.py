@@ -47,7 +47,7 @@ class ProxyRefreshSchedule(ProxyManager):
         """
         self.db.changeTable(self.raw_proxy_queue)
         raw_proxy_item = self.db.pop()
-        self.log.info('ProxyRefreshSchedule: %s start validProxy' % time.ctime())
+        self.log.info(f'ProxyRefreshSchedule: {time.ctime()} start validProxy')
         # 计算剩余代理，用来减少重复计算
         remaining_proxies = self.getAll()
         while raw_proxy_item:
@@ -59,13 +59,13 @@ class ProxyRefreshSchedule(ProxyManager):
             if (raw_proxy not in remaining_proxies) and validUsefulProxy(raw_proxy):
                 self.db.changeTable(self.useful_proxy_queue)
                 self.db.put(raw_proxy)
-                self.log.info('ProxyRefreshSchedule: %s validation pass' % raw_proxy)
+                self.log.info(f'ProxyRefreshSchedule: {raw_proxy} validation pass')
             else:
-                self.log.info('ProxyRefreshSchedule: %s validation fail' % raw_proxy)
+                self.log.info(f'ProxyRefreshSchedule: {raw_proxy} validation fail')
             self.db.changeTable(self.raw_proxy_queue)
             raw_proxy_item = self.db.pop()
             remaining_proxies = self.getAll()
-        self.log.info('ProxyRefreshSchedule: %s validProxy complete' % time.ctime())
+        self.log.info(f'ProxyRefreshSchedule: {time.ctime()} validProxy complete')
 
 
 def refreshPool():
@@ -81,7 +81,7 @@ def main(process_num=30):
 
     # 检验新代理
     pl = []
-    for num in range(process_num):
+    for _ in range(process_num):
         proc = Thread(target=refreshPool, args=())
         pl.append(proc)
 

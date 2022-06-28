@@ -43,10 +43,7 @@ class RedisClient(object):
         # key.keys()在python3中返回dict_keys，不支持index，不能直接使用random.choice
         # 另：python3中，redis返回为bytes,需要解码
         rkey = random.choice(list(key.keys())) if key else None
-        if isinstance(rkey, bytes):
-            return rkey.decode('utf-8')
-        else:
-            return rkey
+        return rkey.decode('utf-8') if isinstance(rkey, bytes) else rkey
             # return self.__conn.srandmember(name=self.name)
 
     def put(self, key):
@@ -61,7 +58,7 @@ class RedisClient(object):
 
     def getvalue(self, key):
         value = self.__conn.hget(self.name, key)
-        return value if value else None
+        return value or None
 
     def pop(self):
         """
